@@ -19,6 +19,12 @@ const flappyBird = {
                 flappyBird.x, flappyBird.y,
                 flappyBird.largura, flappyBird.altura,
             );
+        },
+        gravidade: 0.25,
+        velocidade: 0,
+        atualiza(){
+            flappyBird.velocidade += flappyBird.gravidade;
+            flappyBird.y = flappyBird.y + flappyBird.velocidade;
         }
 }
 
@@ -29,7 +35,7 @@ const fundo = {
     altura: 204,
     x: 0,
     y: 276,
-        back() {
+        desenha() {
             contexto.drawImage(
                 sprites,
                 fundo.spriteX, fundo.spriteY,
@@ -53,7 +59,7 @@ const chao = {
     altura: 109,
     x: 0,
     y: 371,
-        chao() {
+        desenha() {
             contexto.drawImage(
                 sprites,
                 chao.spriteX, chao.spriteY,
@@ -71,16 +77,61 @@ const chao = {
         }
 }
 
-contexto.fillStyle = '#70c5ce';
-contexto.fillRect(0,0, canvas.clientWidth, canvas.height)
+const inicio = {
+    spriteX:130, 
+    spriteY: 0,
+    largura: 180,
+    altura: 152,
+    x: 70,
+    y: 70,
+    desenha() {
+        contexto.drawImage(
+            sprites,
+            inicio.spriteX, inicio.spriteY,
+            inicio.largura, inicio.altura,
+            inicio.x, inicio.y,
+            inicio.largura, inicio.altura,
+        );
+
+    }
+}
+
+const TelaInicio = {
+    desenha(){
+        fundo.desenha();
+        chao.desenha();
+        flappyBird.desenha();
+        inicio.desenha()
+    },
+    click(){
+        telaAtiva = TelaJogo;
+    }
+}
+
+const TelaJogo = {
+    desenha(){
+        fundo.desenha();
+        chao.desenha();
+        flappyBird.desenha();
+        flappyBird.atualiza();
+    },
+    click(){}
+}
+
+var telaAtiva = TelaInicio;
 
 function loop(){
-    flappyBird.desenha();
-    fundo.back();
-    chao.chao();
-
+    contexto.fillStyle = '#70c5ce'
+    contexto.fillRect(0,0, canvas.clientWidth, canvas.height);
+    telaAtiva.desenha()
     requestAnimationFrame(loop);
 }
+
+function mudaTelaAtiva(){
+    telaAtiva.click();
+}
+
+window.addEventListener("click", mudaTelaAtiva);
 
 loop();
 
