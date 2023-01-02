@@ -4,6 +4,9 @@ sprites.src = './sprites.png';
 const canvas = document.querySelector('#game-canvas');
 const contexto = canvas.getContext('2d');
 
+const punch = new Audio();
+punch.src = 'punch.wav';
+
 const flappyBird = {
     spriteX: 0,
     spriteY: 0,
@@ -11,6 +14,10 @@ const flappyBird = {
     altura: 25,
     x: 10,
     y: 50,
+    pulo: 4.6,
+    pula() {
+        flappyBird.velocidade = -flappyBird.pulo;
+    },
         desenha() {
             contexto.drawImage(
                 sprites,
@@ -23,9 +30,22 @@ const flappyBird = {
         gravidade: 0.25,
         velocidade: 0,
         atualiza(){
+            if(fazColisao()){
+                punch.play();
+                telaAtiva = TelaInicio;
+                return;
+            }
             flappyBird.velocidade += flappyBird.gravidade;
             flappyBird.y = flappyBird.y + flappyBird.velocidade;
         }
+}
+
+function fazColisao(){
+    if (flappyBird.y + flappyBird.altura > chao.y) {
+        return true;
+    }
+
+    return false;
 }
 
 const fundo = {
@@ -115,7 +135,9 @@ const TelaJogo = {
         flappyBird.desenha();
         flappyBird.atualiza();
     },
-    click(){}
+    click(){
+        flappyBird.pula();
+    }
 }
 
 var telaAtiva = TelaInicio;
