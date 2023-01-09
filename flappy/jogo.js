@@ -35,7 +35,7 @@ const flappyBird = {
             {spriteX: 0, spriteY: 52,},
             {spriteX: 0, spriteY: 26,},
        ],
-        gravidade: 0.25,
+        gravidade: 0,
         velocidade: 0,
         atualiza(){
             if(fazColisao()){
@@ -86,11 +86,20 @@ const fundo = {
                 fundo.spriteX, fundo.spriteY,
                 fundo.largura, fundo.altura,
                 fundo.x + fundo.largura + -1, fundo.y,
-                fundo.largura, fundo.altura,);
+                fundo.largura, fundo.altura,
+            );
+            contexto.drawImage(
+                    sprites,
+                    fundo.spriteX, fundo.spriteY,
+                    fundo.largura * 2, fundo.altura,
+                    fundo.x + fundo.largura * 2 + -1, fundo.y,
+                    fundo.largura * 2, fundo.altura,);
         },
         atualiza() {
-            fundo.x = fundo.x - 0.5;
-            fundo.x = fundo.x % (fundo.largura / 2);        
+            if((animation_frame % 4) === 0 ){
+                fundo.x = fundo.x - 1;
+                fundo.x = fundo.x % (fundo.largura);
+            }     
         }
 }
 
@@ -185,5 +194,3 @@ function mudaTelaAtiva(){
 window.addEventListener("click", mudaTelaAtiva);
 
 loop();
-
-
